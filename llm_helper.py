@@ -31,23 +31,28 @@ def get_pagination_info(content):
     
     return response.text
 
-def get_reviews(page):
+def get_reviews(content):
     prompt = f"""
-    Extract all the reviews from the following HTML: {page.content}
-    Look for the following information:
-    - Review container selector as container
-    - Review title selector as title
-    - Review body text selector as body
-    - Review rating selector as rating
-    - Reviewer name selector as name
-
-    Do not include any other text or comments in the response.
+    Extract all the reviews from the given HTML Content
+    
+    
+        "reviews_count": 100,
+        "reviews": [
+         
+            "title": "Review Title",
+            "body": "Review body text",
+            "rating": 5,
+            "reviewer": "Reviewer Name"
+        ,
+        ...
+        ] 
+    
+    Include the reviews_count in the response.
+    Exclude all tags (e.g. <p>, <div>, <span>, etc.) in the response. Do not include any other text or comments in the response text.
     Return the information in a JSON format.
+    
+    HTML content: {content}
     """
-
-    #logging the prompt for debugging
-    with open('reviews.txt', 'a') as f:
-        f.write(time.strftime("%Y-%m-%d %H:%M:%S")+"\n\n"+prompt)
 
     response = genai.GenerativeModel("gemini-1.5-flash").generate_content(prompt)
     return response.text
